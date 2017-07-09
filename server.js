@@ -8,6 +8,36 @@ var hydrogen = fs.readFileSync('public/hydrogen.html');
 var styles = fs.readFileSync('public/css/styles.css');
 var date = new Date().toUTCString();
 
+//userInput object is place holder for future POSTs from users
+var userInput = {
+  elementName: 'elementName',
+  elementSymbol: 'elementSymbol',
+  elementAtomicNumber: 'elementAtomicNumber',
+  elementDescription: 'elementDescription'
+};
+
+//function to handle POST data form users
+function parseData(name, symbol, number, description){
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Elements - ${name}</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <h1>${name}</h1>
+  <h2>${symbol}</h2>
+  <h3>Atomic number ${number}</h3>
+  <p>${description}</p>
+  <p><a href="/">back</a></p>
+</body>
+</html>`;
+}
+console.log(parseData('Josh', 'J', 275, 'is a terrible speller'));
+var josh = parseData('Josh', 'J', 275, 'is a terrible speller');
+const test = fs.createWriteStream('josh.html', { flags : 'w' });
+
 const server = http.createServer((req, res) => {
   console.log('this is the shit we are lookinf for',req.headers);
 //handle the routes
@@ -18,8 +48,9 @@ const server = http.createServer((req, res) => {
     req.pipe(res);
 
   } else {
-    //for GET requests, serve up the contents in 'index.html'
+    //for GET requests, serve up the contents in the public folder
 
+    //this is the given method to target the path that is being passed through our switch stament
     var uri = req.url;
 
     switch (uri) {
