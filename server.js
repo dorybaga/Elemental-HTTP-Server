@@ -7,11 +7,11 @@ var date = new Date().toUTCString();
 const server = http.createServer((req, res) => {
 
 //handle the routes
-if (req.method === 'POST') {
-  //pipe the request data to the console
-  req.pipe(process.stdout);
-  res.writeHead(200, {'Content-Type': "text/plain"});
-  req.pipe(res);
+  if (req.method === 'POST') {
+    //pipe the request data to the console
+    req.pipe(process.stdout);
+    res.writeHead(200, {'Content-Type': "text/plain"});
+    req.pipe(res);
 
   } else {
     //for GET requests, serve up the contents in 'index.html'
