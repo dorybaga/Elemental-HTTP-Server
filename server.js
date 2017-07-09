@@ -1,45 +1,24 @@
 /*jshint esversion: 6 */
 const http = require('http');
 const fs = require('fs');
-
-// Objectives
-  // Receive the request
-  // Respond to the request
-  // End connection
+var html = fs.readFileSync('public/index.html');
+var date = new Date().toUTCString();
 
 const server = http.createServer((req, res) => {
 
-  const index = fs.readFileSync('public/index.html', 'utf8', () =>{
-  });
+//handle the routes
+if (req.method === 'POST') {
+  //pipe the request data to the console
+  req.pipe(process.stdout);
+  res.writeHead(200, {'Content-Type': "text/plain"});
+  req.pipe(res);
 
-  const hydrogen = fs.readFileSync('public/hydrogen.html', 'utf8', () =>{
-
-  });
-
-  const helium = fs.readFileSync('public/helium.html', 'utf8', () =>{
-
-  });
-
-  const err = fs.readFileSync('public/404.html', 'utf8', () =>{
-
-  });
-
-  const css = fs.readFileSync('public/css/styles.css', 'utf8', () =>{
-
-  });
-
-  // console.log(req.rawHeaders);
-  res.writeHead(200, {
-    'Content-Type': "text/plain",
-    'Date': 'Wed, 08 Jul 2015 22:31:15 GMT',
-    'Context-Length': '404',
-    'Connection': 'keep-alive\n',
-
-});
-
-  res.write('sending data', 'utf8', () => {
-  res.end();
-  });
+  } else {
+    //for GET requests, serve up the contents in 'index.html'
+    res.writeHead(200, {'Content-Type': "text/html"});
+    res.write(html);
+    res.end();
+  }
 
 });
 
