@@ -5,6 +5,7 @@ var index = fs.readFileSync('public/index.html');
 var error = fs.readFileSync('public/404.html');
 var helium = fs.readFileSync('public/helium.html');
 var hydrogen = fs.readFileSync('public/hydrogen.html');
+var josh = fs.readFileSync('./josh.html');
 var styles = fs.readFileSync('public/css/styles.css');
 var date = new Date().toUTCString();
 
@@ -34,8 +35,8 @@ function parseData(name, symbol, number, description){
 </body>
 </html>`;
 }
-console.log(parseData('Josh', 'J', 275, 'is a terrible speller'));
-var josh = parseData('Josh', 'J', 275, 'is a terrible speller');
+console.log(parseData('Josh', 'J', 275, 'is the man'));
+var josh = parseData('Josh', 'J', 275, 'is the man');
 const test = fs.createWriteStream('josh.html', { flags : 'w' });
 
 const server = http.createServer((req, res) => {
@@ -88,6 +89,12 @@ const server = http.createServer((req, res) => {
     case '/css/styles.css':
       res.writeHead(200, {'Content-Type': "text/css"});
       res.write(styles);
+      res.end();
+      break;
+
+    case '/josh.html':
+      res.writeHead(200, {'Content-Type': "text/html"});
+      res.write(josh);
       res.end();
       break;
 
