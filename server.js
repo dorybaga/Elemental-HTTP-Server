@@ -7,14 +7,12 @@ var index = fs.readFileSync('public/index.html');
 var error = fs.readFileSync('public/404.html');
 var helium = fs.readFileSync('public/helium.html');
 var hydrogen = fs.readFileSync('public/hydrogen.html');
-var josh = fs.readFileSync('./josh.html');
 var styles = fs.readFileSync('public/css/styles.css');
 var date = new Date().toUTCString();
 
 //function to handle POST data form users
 function parseData(name, symbol, number, description){
-  console.log('this is name', name);
-  return `<!DOCTYPE html>
+  var htmlRender = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -29,9 +27,10 @@ function parseData(name, symbol, number, description){
   <p><a href="/">back</a></p>
 </body>
 </html>`;
+return htmlRender;
 }
 
-const test = fs.createWriteStream('josh.html', { flags : 'w' });
+
 
 const server = http.createServer((req, res) => {
 
@@ -48,10 +47,11 @@ const server = http.createServer((req, res) => {
     }).on('end', () => {
       body = Buffer.concat(body).toString();
       var userData = querystring.parse(body);
+      var fileName = userData.elementName;
       console.log('this is user data',userData);
-      parseData(userData.elementName,userData.elementSymbol,userData.elementNumber,userData.elementDescription);
+      var generatedHTML = parseData(userData.elementName,userData.elementSymbol,userData.elementNumber,userData.elementDescription);
+      fs.writeFile(`${userData.elementName}.html`,generatedHTML);
     });
-
 
   } else {
     //for GET requests, serve up the contents in the public folder
@@ -94,12 +94,6 @@ const server = http.createServer((req, res) => {
     case '/css/styles.css':
       res.writeHead(200, {'Content-Type': "text/css"});
       res.write(styles);
-      res.end();
-      break;
-
-    case '/josh.html':
-      res.writeHead(200, {'Content-Type': "text/html"});
-      res.write(josh);
       res.end();
       break;
 
