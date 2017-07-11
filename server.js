@@ -1,6 +1,8 @@
 /*jshint esversion: 6 */
 const http = require('http');
 const fs = require('fs');
+const querystring = require('querystring');
+
 var index = fs.readFileSync('public/index.html');
 var error = fs.readFileSync('public/404.html');
 var helium = fs.readFileSync('public/helium.html');
@@ -9,16 +11,9 @@ var josh = fs.readFileSync('./josh.html');
 var styles = fs.readFileSync('public/css/styles.css');
 var date = new Date().toUTCString();
 
-//userInput object is place holder for future POSTs from users
-var userInput = {
-  elementName: 'elementName',
-  elementSymbol: 'elementSymbol',
-  elementAtomicNumber: 'elementAtomicNumber',
-  elementDescription: 'elementDescription'
-};
-
 //function to handle POST data form users
 function parseData(name, symbol, number, description){
+  console.log('this is name', name);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,18 +30,28 @@ function parseData(name, symbol, number, description){
 </body>
 </html>`;
 }
-console.log(parseData('Josh', 'J', 275, 'is the man'));
-var josh = parseData('Josh', 'J', 275, 'is the man');
+
 const test = fs.createWriteStream('josh.html', { flags : 'w' });
 
 const server = http.createServer((req, res) => {
-  console.log('this is the shit we are lookinf for',req.headers);
+
 //handle the routes
   if (req.method === 'POST') {
     //pipe the request data to the console
     req.pipe(process.stdout);
     res.writeHead(200, {'Content-Type': "text/plain"});
     req.pipe(res);
+
+    let body = [];
+    req.on('data', (chunk) => {
+      body.push(chunk);
+    }).on('end', () => {
+      body = Buffer.concat(body).toString();
+      var userData = querystring.parse(body);
+      console.log('this is user data',userData);
+      parseData(userData.elementName,userData.elementSymbol,userData.elementNumber,userData.elementDescription);
+    });
+
 
   } else {
     //for GET requests, serve up the contents in the public folder
