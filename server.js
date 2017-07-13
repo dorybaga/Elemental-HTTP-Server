@@ -30,8 +30,6 @@ function parseData(name, symbol, number, description){
 return htmlRender;
 }
 
-
-
 const server = http.createServer((req, res) => {
 
 //handle the routes
@@ -48,9 +46,25 @@ const server = http.createServer((req, res) => {
       body = Buffer.concat(body).toString();
       var userData = querystring.parse(body);
       var fileName = userData.elementName;
-      console.log('this is user data',userData);
+      //console.log('this is user data',userData);
       var generatedHTML = parseData(userData.elementName,userData.elementSymbol,userData.elementNumber,userData.elementDescription);
-      fs.writeFile(`${userData.elementName}.html`,generatedHTML);
+      fs.writeFile(`public/${userData.elementName}.html`,generatedHTML);
+
+      fs.readdir('public/', () => {
+
+        if ('blah'){
+          return;
+        } else {
+
+        }
+      });
+
+
+
+
+
+
+
     });
 
   } else {
@@ -109,4 +123,3 @@ const server = http.createServer((req, res) => {
 server.listen(8080, () => {
   console.log('server sprinting on port 8080');
 });
-
