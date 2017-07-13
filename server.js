@@ -48,21 +48,51 @@ const server = http.createServer((req, res) => {
       var fileName = userData.elementName;
       //console.log('this is user data',userData);
       var generatedHTML = parseData(userData.elementName,userData.elementSymbol,userData.elementNumber,userData.elementDescription);
-      fs.writeFile(`public/${userData.elementName}.html`,generatedHTML);
+      fs.readdir('public/', (err, files) => {
+        var currFiles = files;
+        console.log("this is var files: ", files);
 
-      fs.readdir('public/', () => {
+          function makeHTML(arr){
+            var listOfItems = [];
 
-        if ('blah'){
+            for(var i = 0; i < arr.length; i++){
+              console.log("this is i:", arr[i]);
+              listOfItems += `<li>
+<a href="${arr[i]}">"${userData.elementName}"</a>
+  </li>`;
+
+            }
+
+            var indexHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Elements</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <h1>The Elements</h1>
+  <h2>These are all the known elements.</h2>
+  <h3>These are 2</h3>
+  <ol>
+    ${listOfItems}
+  </ol>
+</body>
+</html>`;
+          return indexHTML;
+          }
+
+        if (files.indexOf(`${userData.elementName}.html`)=== -1){
+          fs.writeFile(`public/${userData.elementName}.html`,generatedHTML);
+          var updateHTML = makeHTML(files);
+          fs.writeFile(`public/index.html`, updateHTML);
+          // call makeHTML function here
           return;
         } else {
-
+          console.log("i already exist");
         }
+
       });
-
-
-
-
-
 
 
     });
